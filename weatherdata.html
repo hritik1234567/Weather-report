@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<style>
+    .hidden{
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="inputbar">
+        <input type="text" placeholder="Enter your city" class="input" id="cityInput" onkeydown="handleEnter(event)" autofocus>
+        <button type="button" class="search" onclick="loadDoc()"><img src="search.png" alt="" class="image"></button>
+    </div>
+    <img src="" alt="" id="weatherpng" class="hidden" >
+    <div class="info">
+        <p id="temp"></p>
+        <p id="city"></p>
+    </div>
+    <div  id="moreinfo">
+        <div class="moreinfo1" >
+            <div class="moreinfo11">
+                <img src="humidity.png" alt="Humidity">
+                <p id="humidity"></p>
+                </div>
+            <p class="moreinfo1p">Humidity</p>
+        </div>
+    <div class="moreinfo2" >
+    <div class="moreinfo21">
+        <img src="wind.png" alt="windspeed">
+        <p id="windspeed"></p>
+        </div>
+    <p class="moreinfo2p">Wind Speed</p>
+</div>
+    </div>
+
+</div>
+
+
+
+
+   
+    <script>
+        var data;
+        
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+            loadDoc(); // Trigger the function when Enter key is pressed
+            }
+        }
+        var date=new Date();
+        function loadDoc() {
+            const city = document.getElementById('cityInput').value; // Replace with the desired city name
+            const weatherimage= document.getElementById('weatherpng');
+            
+
+            $.ajax({
+                method: 'GET',
+                url: 'https://api.api-ninjas.com/v1/weather?city=' + city,
+                headers: { 'X-Api-Key': 'S10GLPWYwe0RJMMKrvfTcA==IMr6sqiFFXfNweHe' }, // Replace with your API key
+                contentType: 'application/json',
+                success: function(result) {
+                    console.log(result);
+                    data=result;
+                    console.log(data.humidity);
+
+                    weatherimage.classList.remove('hidden');
+                    
+                    
+
+                    if(data.cloud_pct<=10){
+                        weatherimage.src='clear.png';
+                    }
+                    if(data.cloud_pct>10&&data.cloud_pct<=40){
+                        weatherimage.src='mist.png';
+                    }
+                    if(data.cloud_pct>40&&data.cloud_pct<=70){
+                        weatherimage.src='clouds.png';
+                    }
+                    if(data.cloud_pct>70&&data.cloud_pct<=90){
+                        weatherimage.src='cloudynight.png';
+                    }
+                    if(data.cloud_pct>90){
+                        weatherimage.src='rain.png';
+                    }
+                    if(data.cloud_pct>90&&data.temp<=0){
+                        weatherimage.src='snow.png';
+                    }
+                    if(data.cloud_pct<=10&&date.getHours()>=19&&date.getHours() <=5){
+                        weatherimage.src='clearmoon.png';
+                    }
+                    if(data.cloud_pct>90&&date.getHours()>=19&&date.getHours() <=5){
+                        weatherimage.src='nightrain.png';
+                    }
+
+                    document.getElementById('temp').innerHTML =  data.temp + '°C';
+                    document.getElementById('city').innerHTML = city;
+                    document.getElementById('humidity').innerHTML =  data.humidity + '%';
+                    document.getElementById('windspeed').innerHTML =  data.wind_speed + 'km/hr';
+
+
+
+                    document.getElementById("moreinfo").style.display = "flex";
+                    // You can remove anything written in placeholder
+                    cityInput.value = "";
+                },
+                error: function ajaxError(jqXHR) {
+                    console.error('Error: ', jqXHR.responseText);
+                    // Handle the error here if needed
+                }
+            });
+            
+            
+        }
+    </script>
+</body>
+</html>
