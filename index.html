@@ -21,7 +21,7 @@
         <input type="text" placeholder="Enter your city" class="input" id="cityInput" onkeydown="handleEnter(event)" autofocus>
         <button type="button" class="search" onclick="loadDoc()"><img src="search.png" alt="" class="image"></button>
     </div>
-    <img src="" alt="" id="weatherpng" class="hidden" >
+    <img src="" alt="" id="weatherpng"  >
     <div class="info">
         <p id="temp"></p>
         <p id="city"></p>
@@ -73,7 +73,7 @@
                     data=result;
                     console.log(data.humidity);
 
-                    weatherimage.classList.remove('hidden');
+                    myElement.style.display = "block";
                     
                     
 
